@@ -1,0 +1,26 @@
+# Önce HSV formatına çeviriyoruz
+
+import cv2
+import numpy as np
+
+kamera = cv2.VideoCapture(0)
+
+while (1):
+    ret, frame = kamera.read()
+
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)            # hsv çevirme
+
+    dusuk_beyaz = np.array([0,0,140])
+    ust_beyaz = np.array([256,60,256])
+
+    mask = cv2.inRange(hsv, dusuk_beyaz, ust_beyaz)     # ust ve alt sınırları belirleme
+    son_resim = cv2.bitwise_and(frame, frame, mask=mask)
+
+    cv2.imshow("Orjinal",frame)
+    cv2.imshow("Mask", mask)
+    cv2.imshow("Son Resim", son_resim)
+    if cv2.waitKey(25) & 0xFF == ord("q"):
+        break
+
+kamera.release()
+cv2.destroyAllWindows()
